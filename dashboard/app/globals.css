@@ -1,0 +1,237 @@
+:root {
+  /* Minimalist palette. Swap --accent for Fini's exact brand hex from usefini.com. */
+  --bg: #ffffff;
+  --surface: #fafafb;
+  --ink: #0b0b12;
+  --muted: #6b7280;
+  --line: #e8e8ee;
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
+
+  --good: #15803d;
+  --good-bg: #ecfdf5;
+  --ok: #b45309;
+  --ok-bg: #fffbeb;
+  --bad: #b91c1c;
+  --bad-bg: #fef2f2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 48px 24px 80px;
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 20px;
+}
+
+.wordmark {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.wordmark .dot {
+  color: var(--accent);
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.section {
+  margin-top: 44px;
+}
+
+.section h2 {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px 18px;
+  background: var(--bg);
+}
+
+.card .label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: capitalize;
+}
+
+.card .value {
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 6px 0 12px;
+}
+
+.bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--line);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+
+table.heat {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+table.heat th,
+table.heat td {
+  padding: 8px 10px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+table.heat th {
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+table.heat td.intent,
+table.heat th.intent {
+  text-align: left;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.cell {
+  border-radius: 6px;
+  padding: 4px 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.tone-good {
+  color: var(--good);
+  background: var(--good-bg);
+}
+.tone-ok {
+  color: var(--ok);
+  background: var(--ok-bg);
+}
+.tone-bad {
+  color: var(--bad);
+  background: var(--bad-bg);
+}
+
+.panel {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 22px 24px;
+  background: var(--surface);
+}
+
+.callout {
+  border-left: 3px solid var(--bad);
+  background: var(--bad-bg);
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 18px;
+  color: #7f1d1d;
+  font-size: 13.5px;
+}
+
+table.plain {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  margin-top: 8px;
+}
+
+table.plain th,
+table.plain td {
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+
+table.plain th {
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.delta-neg {
+  color: var(--bad);
+  font-weight: 600;
+}
+.delta-pos {
+  color: var(--good);
+  font-weight: 600;
+}
+
+.sig {
+  font-weight: 700;
+  color: var(--bad);
+}
+
+.foot {
+  margin-top: 48px;
+  color: var(--muted);
+  font-size: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+}

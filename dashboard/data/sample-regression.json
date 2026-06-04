@@ -1,0 +1,128 @@
+{
+  "baseline_label": "v1-baseline",
+  "candidate_label": "v2-candidate",
+  "overall": [
+    {
+      "metric": "resolution_accuracy",
+      "baseline": 1.0,
+      "candidate": 0.8,
+      "delta": -0.19999999999999996
+    },
+    {
+      "metric": "escalation_intelligence",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    {
+      "metric": "tool_coverage",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    {
+      "metric": "policy_guardrail_hard",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    {
+      "metric": "completeness",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    {
+      "metric": "tone_empathy",
+      "baseline": 0.95,
+      "candidate": 1.0,
+      "delta": 0.050000000000000044
+    },
+    {
+      "metric": "groundedness",
+      "baseline": 1.0,
+      "candidate": 1.0,
+      "delta": 0.0
+    },
+    {
+      "metric": "policy_adherence",
+      "baseline": 1.0,
+      "candidate": 0.9,
+      "delta": -0.09999999999999998
+    }
+  ],
+  "regressed_slices": [
+    {
+      "intent": "refund",
+      "metric": "resolution_accuracy",
+      "baseline": 1.0,
+      "candidate": 0.3333333333333333,
+      "delta": -0.6666666666666667
+    },
+    {
+      "intent": "refund",
+      "metric": "policy_adherence",
+      "baseline": 1.0,
+      "candidate": 0.6666666666666666,
+      "delta": -0.33333333333333337
+    }
+  ],
+  "mcnemar": [
+    {
+      "metric": "resolution_accuracy",
+      "regressed": 2,
+      "improved": 0,
+      "statistic": 0.5,
+      "p_value": 0.5
+    },
+    {
+      "metric": "escalation_intelligence",
+      "regressed": 0,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    },
+    {
+      "metric": "tool_coverage",
+      "regressed": 0,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    },
+    {
+      "metric": "policy_guardrail_hard",
+      "regressed": 0,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    },
+    {
+      "metric": "completeness",
+      "regressed": 0,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    },
+    {
+      "metric": "tone_empathy",
+      "regressed": 0,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    },
+    {
+      "metric": "groundedness",
+      "regressed": 0,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    },
+    {
+      "metric": "policy_adherence",
+      "regressed": 1,
+      "improved": 0,
+      "statistic": 0.0,
+      "p_value": 1.0
+    }
+  ]
+}
