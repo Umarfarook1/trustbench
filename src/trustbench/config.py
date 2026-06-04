@@ -13,6 +13,10 @@ PROJECT_ROOT = PACKAGE_ROOT.parents[1]                  # repo root
 KB_DIR = PACKAGE_ROOT / "scenario" / "knowledge_base"
 POLICY_PATH = PACKAGE_ROOT / "scenario" / "policy.md"
 
+DATA_DIR = PROJECT_ROOT / "data"
+GOLDEN_DIR = DATA_DIR / "golden"
+RESULTS_DIR = DATA_DIR / "results"
+
 # Verify current model ids with client.models.list() before trusting these.
 AGENT_MODEL = os.getenv("TRUSTBENCH_AGENT_MODEL", "gemini-2.5-flash")
 JUDGE_MODEL = os.getenv("TRUSTBENCH_JUDGE_MODEL", "gemini-2.5-pro")
