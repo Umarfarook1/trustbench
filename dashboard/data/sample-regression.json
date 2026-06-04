@@ -28,20 +28,20 @@
     },
     {
       "metric": "completeness",
-      "baseline": 1.0,
-      "candidate": 1.0,
-      "delta": 0.0
-    },
-    {
-      "metric": "tone_empathy",
       "baseline": 0.9444444444444444,
       "candidate": 0.9444444444444444,
       "delta": 0.0
     },
     {
+      "metric": "tone_empathy",
+      "baseline": 0.8888888888888888,
+      "candidate": 0.8888888888888888,
+      "delta": 0.0
+    },
+    {
       "metric": "groundedness",
-      "baseline": 1.0,
-      "candidate": 0.7777777777777778,
+      "baseline": 0.9444444444444444,
+      "candidate": 0.7222222222222222,
       "delta": -0.2222222222222222
     },
     {

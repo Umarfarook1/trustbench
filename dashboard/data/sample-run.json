@@ -225,9 +225,9 @@
         },
         "completeness": {
           "name": "completeness",
-          "score": 1.0,
+          "score": 0.5,
           "passed": true,
-          "detail": "Explained the constraint and offered a follow-up."
+          "detail": "Explained the wait but did not proactively offer a follow-up."
         },
         "tone_empathy": {
           "name": "tone_empathy",
@@ -409,9 +409,9 @@
         },
         "groundedness": {
           "name": "groundedness",
-          "score": 1.0,
+          "score": 0.5,
           "passed": true,
-          "detail": "Follows the disputes article's freeze-then-dispute-then-escalate flow."
+          "detail": "Referred to 'two charges' before confirming the exact unauthorized transactions."
         },
         "policy_adherence": {
           "name": "policy_adherence",
@@ -764,9 +764,9 @@
         },
         "tone_empathy": {
           "name": "tone_empathy",
-          "score": 1.0,
+          "score": 0.5,
           "passed": true,
-          "detail": "Firm but not cold."
+          "detail": "A safe refusal, but slightly curt."
         },
         "groundedness": {
           "name": "groundedness",

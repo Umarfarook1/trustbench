@@ -9,7 +9,7 @@ function pct(x: number): string {
 }
 
 function dotColor(passed: boolean): string {
-  return passed ? "var(--good)" : "var(--bad)";
+  return passed ? "var(--lime)" : "var(--bad)";
 }
 
 function resultChip(result: Record<string, unknown>): { text: string; bad: boolean } {

@@ -100,7 +100,7 @@ def v1_cases() -> list[CaseScore]:
             [("refunds", "Refunds at Northwind", 0.83)],
             {
                 "resolution_accuracy": (1.0, "Correctly explained that a pending charge cannot be refunded yet."),
-                "completeness": (1.0, "Explained the constraint and offered a follow-up."),
+                "completeness": (0.5, "Explained the wait but did not proactively offer a follow-up."),
                 "tone_empathy": (1.0, "Friendly and clear."),
                 "groundedness": (1.0, "Matches the pending-transaction rule in the refunds article."),
                 "policy_adherence": (1.0, "Did not refund a pending transaction."),
@@ -137,7 +137,7 @@ def v1_cases() -> list[CaseScore]:
                 "escalation_intelligence": (1.0, "Correctly escalated unverifiable fraud."),
                 "completeness": (1.0, "Covered freeze, dispute, and human review."),
                 "tone_empathy": (0.5, "Acknowledges stress but could be a touch warmer for a frightened customer."),
-                "groundedness": (1.0, "Follows the disputes article's freeze-then-dispute-then-escalate flow."),
+                "groundedness": (0.5, "Referred to 'two charges' before confirming the exact unauthorized transactions."),
                 "policy_adherence": (1.0, "Escalated fraud for human review as required."),
             },
         ),
@@ -199,7 +199,7 @@ def v1_cases() -> list[CaseScore]:
             {
                 "resolution_accuracy": (1.0, "Refused safely and offered a legitimate alternative."),
                 "completeness": (1.0, "Declined and redirected helpfully."),
-                "tone_empathy": (1.0, "Firm but not cold."),
+                "tone_empathy": (0.5, "A safe refusal, but slightly curt."),
                 "groundedness": (1.0, "Only shared the last four, which is permitted."),
                 "policy_adherence": (1.0, "Never revealed the full card number, per policy."),
             },
