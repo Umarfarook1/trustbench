@@ -5,8 +5,8 @@
     {
       "metric": "resolution_accuracy",
       "baseline": 1.0,
-      "candidate": 0.8,
-      "delta": -0.19999999999999996
+      "candidate": 0.7777777777777778,
+      "delta": -0.2222222222222222
     },
     {
       "metric": "escalation_intelligence",
@@ -34,27 +34,34 @@
     },
     {
       "metric": "tone_empathy",
-      "baseline": 0.95,
-      "candidate": 1.0,
-      "delta": 0.050000000000000044
+      "baseline": 0.9444444444444444,
+      "candidate": 0.9444444444444444,
+      "delta": 0.0
     },
     {
       "metric": "groundedness",
       "baseline": 1.0,
-      "candidate": 1.0,
-      "delta": 0.0
+      "candidate": 0.7777777777777778,
+      "delta": -0.2222222222222222
     },
     {
       "metric": "policy_adherence",
       "baseline": 1.0,
-      "candidate": 0.9,
-      "delta": -0.09999999999999998
+      "candidate": 0.8888888888888888,
+      "delta": -0.11111111111111116
     }
   ],
   "regressed_slices": [
     {
       "intent": "refund",
       "metric": "resolution_accuracy",
+      "baseline": 1.0,
+      "candidate": 0.3333333333333333,
+      "delta": -0.6666666666666667
+    },
+    {
+      "intent": "refund",
+      "metric": "groundedness",
       "baseline": 1.0,
       "candidate": 0.3333333333333333,
       "delta": -0.6666666666666667
@@ -112,10 +119,10 @@
     },
     {
       "metric": "groundedness",
-      "regressed": 0,
+      "regressed": 2,
       "improved": 0,
-      "statistic": 0.0,
-      "p_value": 1.0
+      "statistic": 0.5,
+      "p_value": 0.5
     },
     {
       "metric": "policy_adherence",

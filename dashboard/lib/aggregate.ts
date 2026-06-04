@@ -1,13 +1,30 @@
-import fs from "node:fs";
-import path from "node:path";
+// Pure, client-safe helpers and types. No node imports here so client components can use
+// it. Data loading (fs) lives in lib/data.ts, server only.
 
 export type Metric = { name: string; score: number; passed: boolean; detail: string };
+export type ToolStep = {
+  name: string;
+  args: Record<string, unknown>;
+  result: Record<string, unknown>;
+};
+export type Hit = { doc_id: string; title: string; score: number };
+export type Trace = {
+  ticket: string;
+  agent_version: string;
+  policy_in_context: boolean;
+  retrieval_query: string;
+  hits: Hit[];
+  steps: ToolStep[];
+  final_response: string;
+  exceeded_budget: boolean;
+};
 export type Case = {
   case_id: string;
   intent: string;
   difficulty: string;
   agent_text: string;
   metrics: Record<string, Metric>;
+  trace: Trace;
 };
 export type Run = { run_label: string; agent_version: string; cases: Case[] };
 
@@ -34,27 +51,24 @@ export type RegressionReport = {
   mcnemar: McNemar[];
 };
 
-function readJson<T>(file: string): T {
-  const full = path.join(process.cwd(), "data", file);
-  return JSON.parse(fs.readFileSync(full, "utf-8")) as T;
-}
-
-export function loadRun(): Run {
-  return readJson<Run>("sample-run.json");
-}
-
-export function loadRegression(): RegressionReport {
-  return readJson<RegressionReport>("sample-regression.json");
-}
+// The seven trust dimensions, in display order.
+export const METRIC_ORDER = [
+  "resolution_accuracy",
+  "escalation_intelligence",
+  "policy_adherence",
+  "policy_guardrail_hard",
+  "completeness",
+  "tone_empathy",
+  "groundedness",
+  "tool_coverage",
+];
 
 export function metricNames(run: Run): string[] {
-  const names: string[] = [];
-  for (const c of run.cases) {
-    for (const name of Object.keys(c.metrics)) {
-      if (!names.includes(name)) names.push(name);
-    }
-  }
-  return names;
+  const present = new Set<string>();
+  for (const c of run.cases) for (const k of Object.keys(c.metrics)) present.add(k);
+  const ordered = METRIC_ORDER.filter((m) => present.has(m));
+  for (const m of present) if (!ordered.includes(m)) ordered.push(m);
+  return ordered;
 }
 
 function mean(values: number[]): number {
@@ -86,6 +100,14 @@ export function byIntent(run: Run): Record<string, Record<string, number>> {
   return out;
 }
 
+export function caseById(run: Run, id: string): Case | undefined {
+  return run.cases.find((c) => c.case_id === id);
+}
+
 export function prettyMetric(name: string): string {
-  return name.replace(/_/g, " ");
+  return name.replace(/_/g, " ").replace("policy guardrail hard", "guardrails (hard checks)");
+}
+
+export function prettyCase(id: string): string {
+  return id.replace(/_/g, " ");
 }
