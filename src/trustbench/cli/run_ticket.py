@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 
+from trustbench.agent.prompts import get_system_prompt
 from trustbench.agent.support_agent import SupportAgent
 from trustbench.config import AGENT_MODEL, KB_DIR, POLICY_PATH, load_api_key
 from trustbench.llm.gemini_client import GeminiClient
@@ -12,7 +13,7 @@ from trustbench.scenario.state import seed_state
 from trustbench.scenario.tools import ToolRegistry
 
 
-def build_agent() -> SupportAgent:
+def build_agent(version: str = "v1") -> SupportAgent:
     api_key = load_api_key()
     embedder = GeminiEmbedder(api_key)
     index = KnowledgeIndex(embedder)
@@ -23,7 +24,8 @@ def build_agent() -> SupportAgent:
         state=seed_state(),
         registry=ToolRegistry(),
         policy_text=POLICY_PATH.read_text(encoding="utf-8"),
-        version="v1",
+        system_template=get_system_prompt(version),
+        version=version,
     )
 
 

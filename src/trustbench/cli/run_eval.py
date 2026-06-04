@@ -21,7 +21,7 @@ def main() -> None:
 
     api_key = load_api_key()
     cases = load_golden_set(Path(args.golden))
-    agent = build_agent()
+    agent = build_agent(args.agent_version)
     judge = GeminiJudge(api_key, JUDGE_MODEL)
 
     print(f"Running {len(cases)} cases through agent {args.agent_version}, judging with {JUDGE_MODEL} ...")
