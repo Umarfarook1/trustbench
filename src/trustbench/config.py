@@ -22,6 +22,12 @@ AGENT_MODEL = os.getenv("TRUSTBENCH_AGENT_MODEL", "gemini-2.5-flash")
 JUDGE_MODEL = os.getenv("TRUSTBENCH_JUDGE_MODEL", "gemini-2.5-pro")
 EMBED_MODEL = os.getenv("TRUSTBENCH_EMBED_MODEL", "gemini-embedding-001")
 
+# Groq path (OpenAI-compatible). Used when Gemini access is unavailable. A capable agent
+# graded by a different model family, so the judge is not grading itself.
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+GROQ_AGENT_MODEL = os.getenv("TRUSTBENCH_GROQ_AGENT_MODEL", "llama-3.3-70b-versatile")
+GROQ_JUDGE_MODEL = os.getenv("TRUSTBENCH_GROQ_JUDGE_MODEL", "openai/gpt-oss-120b")
+
 MAX_AGENT_STEPS = 6
 RETRIEVAL_K = 3
 
@@ -30,4 +36,11 @@ def load_api_key() -> str:
     key = os.getenv("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY is not set. Copy .env.example to .env and fill it in.")
+    return key
+
+
+def load_groq_key() -> str:
+    key = os.getenv("GROQ_API_KEY")
+    if not key:
+        raise RuntimeError("GROQ_API_KEY is not set. Add it to .env.")
     return key
