@@ -1,6 +1,27 @@
-from trustbench.llm.groq_client import _to_messages, _to_tools
+from types import SimpleNamespace
+
+from trustbench.llm.groq_client import _recover_tool_call, _to_messages, _to_tools
 from trustbench.llm.types import Message, ToolCall, ToolResult, ToolSpec
 from trustbench.retrieval.local_embedder import HashingEmbedder
+
+
+def test_recover_tool_call_parses_malformed_generation():
+    err = SimpleNamespace(
+        body={
+            "error": {
+                "code": "tool_use_failed",
+                "failed_generation": '<function=escalate_to_human>{"summary": "needs a human"}',
+            }
+        }
+    )
+    out = _recover_tool_call(err)
+    assert out is not None
+    assert out.tool_calls[0].name == "escalate_to_human"
+    assert out.tool_calls[0].args == {"summary": "needs a human"}
+
+
+def test_recover_tool_call_ignores_unrelated_errors():
+    assert _recover_tool_call(SimpleNamespace(body={"error": {"code": "rate_limit_exceeded"}})) is None
 
 
 def test_hashing_embedder_is_deterministic():

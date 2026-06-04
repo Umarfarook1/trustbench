@@ -4,6 +4,7 @@ __pycache__/
 .pytest_cache/
 .env
 *.sqlite
+data/results/
 .DS_Store
 # dashboard (Phase 4)
 node_modules/

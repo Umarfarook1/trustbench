@@ -1,12 +1,33 @@
 from __future__ import annotations
 
 import json
+import re
 from typing import Any
 
-from openai import OpenAI
+from openai import BadRequestError, OpenAI
 
 from trustbench.config import GROQ_BASE_URL
 from trustbench.llm.types import LLMResponse, Message, ToolCall, ToolSpec
+
+# Small Llama models sometimes emit a tool call in Llama's text format,
+# <function=name>{json args}, which Groq rejects with code "tool_use_failed".
+# We parse the intended call back out of the error so the agent loop continues.
+_FUNC_RE = re.compile(r"<function=([^>\s]+)>\s*(\{.*\})", re.DOTALL)
+
+
+def _recover_tool_call(err: BadRequestError) -> LLMResponse | None:
+    body = getattr(err, "body", None)
+    info = body.get("error", body) if isinstance(body, dict) else {}
+    if not isinstance(info, dict) or info.get("code") != "tool_use_failed":
+        return None
+    match = _FUNC_RE.search(info.get("failed_generation", "") or "")
+    if not match:
+        return None
+    try:
+        args = json.loads(match.group(2))
+    except json.JSONDecodeError:
+        args = {}
+    return LLMResponse(tool_calls=[ToolCall(name=match.group(1), args=args)])
 
 
 def _to_tools(specs: list[ToolSpec]) -> list[dict[str, Any]]:
@@ -80,7 +101,13 @@ class GroqClient:
             kwargs["tools"] = specs
             kwargs["tool_choice"] = "auto"
 
-        resp = self._client.chat.completions.create(**kwargs)
+        try:
+            resp = self._client.chat.completions.create(**kwargs)
+        except BadRequestError as e:
+            recovered = _recover_tool_call(e)
+            if recovered is not None:
+                return recovered
+            raise
         msg = resp.choices[0].message
 
         if msg.tool_calls:

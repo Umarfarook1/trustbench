@@ -108,9 +108,10 @@ export default function Dashboard({
     v1: Math.round(d.baseline * 100),
     v2: Math.round(d.candidate * 100),
   }));
-  const topSlice = reg.regressed_slices[0];
-  const cryptoV1 = caseById(v1, "refund_crypto_refused");
-  const cryptoV2 = caseById(v2, "refund_crypto_refused");
+  const ov1 = overall(v1);
+  const ov2 = overall(v2);
+  const disputeV1 = caseById(v1, "dispute_unrecognized_charge");
+  const disputeV2 = caseById(v2, "dispute_unrecognized_charge");
 
   const resolution = ov["resolution_accuracy"] ?? 0;
   const policy = ov["policy_adherence"] ?? 0;
@@ -147,7 +148,7 @@ export default function Dashboard({
             ))}
           </div>
           <div className="nav-right">
-            <span className="pill pill-sample">sample data</span>
+            <span className="pill pill-sample">live · groq</span>
             <a href="https://github.com/Umarfarook1/trustbench" target="_blank" rel="noreferrer">
               GitHub
             </a>
@@ -192,15 +193,15 @@ export default function Dashboard({
                   <div className="n">
                     7<small> trust metrics</small>
                   </div>
-                  <div className="l">Named after Fini&apos;s own framework, judged and calibrated.</div>
+                  <div className="l">Named after Fini&apos;s own framework, judged by an independent model.</div>
                 </div>
               </div>
               <div className="bigstat">
                 <div className="n" style={{ color: "var(--bad)" }}>
                   {reg.regressed_slices.length}
-                  <small> regression caught</small>
+                  <small> regressed slices</small>
                 </div>
-                <div className="l">A category-level failure the overall average hid completely.</div>
+                <div className="l">Category-level failures the overall averages hid.</div>
               </div>
             </div>
             <div className="card radar-card">
@@ -440,38 +441,44 @@ export default function Dashboard({
               <div className="kicker">the regression</div>
               <h2>Caught side by side, before it shipped</h2>
             </div>
-            <div className="section-note">Overall looked fine. One category did not.</div>
+            <div className="section-note">v2 looked better on average. The harness disagreed.</div>
           </div>
 
-          {topSlice ? (
-            <div className="reg-callout">
-              <span className="mark">!</span>
-              <div>
-                The v2 prompt was warmer and scored flat-to-better overall, but <b>{topSlice.intent}</b>{" "}
-                tickets dropped {Math.round(Math.abs(topSlice.delta) * 100)} points on{" "}
-                {prettyMetric(topSlice.metric)} ({pct(topSlice.baseline)} to {pct(topSlice.candidate)}).
-                Root cause: v2 silently dropped one line, the tool-confirmation guardrail, from the
-                system prompt, so the agent began claiming refunds that policy forbids.
-              </div>
+          <div className="reg-callout">
+            <span className="mark">!</span>
+            <div>
+              On aggregate, v2 looked like an upgrade: warmer tone, more complete answers, more tool
+              use. The harness caught what the average hid. <b>Policy adherence fell from{" "}
+              {pct(ov1["policy_adherence"])} to {pct(ov2["policy_adherence"])}</b> and groundedness
+              from {pct(ov1["groundedness"])} to {pct(ov2["groundedness"])}. Told to resolve
+              everything itself and avoid handing off, the agent started cutting corners: opening a
+              dispute before confirming the charge, freezing a card before verifying identity, and
+              making claims it could not support.
             </div>
-          ) : null}
+          </div>
 
           <div className="versus">
             <div className="vcol good">
               <div className="vlabel">
-                <span>refund crypto · same ticket</span>
-                <span className="ver">v1 · held policy</span>
+                <span>unrecognized charge · same ticket</span>
+                <span className="ver">v1 · confirmed first</span>
               </div>
-              <p>{cryptoV1?.agent_text}</p>
+              <p>{disputeV1?.agent_text}</p>
             </div>
             <div className="vcol bad">
               <div className="vlabel">
-                <span>refund crypto · same ticket</span>
-                <span className="ver">v2 · broke policy</span>
+                <span>unrecognized charge · same ticket</span>
+                <span className="ver">v2 · skipped the check</span>
               </div>
-              <p>{cryptoV2?.agent_text}</p>
+              <p>{disputeV2?.agent_text}</p>
             </div>
           </div>
+
+          {disputeV2?.metrics?.policy_adherence ? (
+            <p style={{ fontSize: 13, color: "var(--muted)", marginTop: 10, fontStyle: "italic" }}>
+              Judge on v2: &ldquo;{disputeV2.metrics.policy_adherence.detail}&rdquo;
+            </p>
+          ) : null}
 
           <div className="reg-grid" style={{ marginTop: 18 }}>
             <div className="card chart-card">
@@ -485,7 +492,7 @@ export default function Dashboard({
                     <Tooltip contentStyle={tipStyle} formatter={(v) => [`${v}%`, ""]} />
                     <Legend wrapperStyle={{ fontSize: 12 }} />
                     <Bar dataKey="v1" name="agent v1" fill="var(--lime)" radius={[4, 4, 0, 0]} animationDuration={600} />
-                    <Bar dataKey="v2" name="agent v2" fill="var(--bad)" radius={[4, 4, 0, 0]} animationDuration={600} />
+                    <Bar dataKey="v2" name="agent v2" fill="var(--ink-soft)" radius={[4, 4, 0, 0]} animationDuration={600} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -515,9 +522,11 @@ export default function Dashboard({
                 </tbody>
               </table>
               <p style={{ fontSize: 12.5, color: "var(--muted)", marginTop: 10 }}>
-                Same cases under both versions, so a paired test shows the drop is not random. This is
-                exactly what Fini&apos;s Test Suite does: catch accuracy regressions before production.
-                <Cite id="paramount" />
+                Same cases under both versions, so this paired test isolates real change from noise.
+                Policy adherence regressed on 3 cases and improved on 0, a clean direction, but with 20
+                cases the exact p is 0.25: directionally clear, not yet significant. That caveat is
+                itself a finding, the slice needs a bigger golden set. Catching regressions this way is
+                what Fini&apos;s own Test Suite does.<Cite id="paramount" />
               </p>
             </div>
           </div>
@@ -568,9 +577,9 @@ export default function Dashboard({
               role the work is the only honest signal.
             </p>
             <p>
-              <strong>The ask is twenty minutes.</strong> The full engine, 76 passing tests, the golden
-              set, the judges, and the regression tooling are on GitHub, and it is designed to flip from
-              this sample data to a live run in one command.
+              <strong>The ask is twenty minutes.</strong> The full engine, 82 passing tests, the golden
+              set, the agent, the judge, and the regression tooling are on GitHub, and the whole eval
+              re-runs end to end on one command.
             </p>
           </div>
           <div className="cta-row">
@@ -609,7 +618,7 @@ export default function Dashboard({
         </section>
 
         <footer className="foot">
-          <span>Sample data, generated from the real eval schema. Swap in a live run for real numbers.</span>
+          <span>Live run on Groq: agent openai/gpt-oss-20b, judged by meta-llama/llama-4-scout-17b. Real conversations, real scores.</span>
           <a href="https://github.com/Umarfarook1/trustbench" target="_blank" rel="noreferrer">
             github.com/Umarfarook1/trustbench
           </a>

@@ -64,10 +64,13 @@ def main() -> None:
 
     print(f"agent={GROQ_AGENT_MODEL}  judge={GROQ_JUDGE_MODEL}  cases={len(cases)}")
 
+    DASH.mkdir(parents=True, exist_ok=True)
+
     print("running v1 ...")
     v1 = run_eval(cases, build_agent("v1", key), judge, run_label="v1-baseline", agent_version="v1")
     save_run(v1, RESULTS_DIR / "v1-baseline.json")
-    print("v1 done")
+    (DASH / "sample-run.json").write_text(v1.model_dump_json(indent=2), encoding="utf-8")
+    print("v1 done (dashboard v1 written)")
 
     print("running v2 ...")
     v2 = run_eval(cases, build_agent("v2", key), judge, run_label="v2-candidate", agent_version="v2")
