@@ -2,26 +2,19 @@
 
 A production-readiness harness for AI customer-support agents.
 
+Most teams put a support agent in front of customers on the strength of a good demo and a
+deflection rate. Neither tells you whether the agent actually resolves problems, follows
+policy, or quietly got worse on one ticket category after the last prompt change.
+
 TrustBench takes a support agent, runs it against a versioned golden set, scores it on
-seven trust dimensions (the same dimensions Fini publishes), catches regressions by ticket
-category before they ship, and packages the result with a 14-day onboarding playbook and an
-ROI writeup. It is built around a fictional consumer neobank, "Northwind".
+six trust dimensions, catches regressions by ticket category before they ship, and packages
+the result with a 14-day onboarding playbook and an ROI writeup. It measures resolution, not
+deflection, and it traces failures back to retrieval, generation, policy, or reasoning so you
+can tell which layer actually broke. It is built around a fictional consumer neobank,
+"Northwind".
 
 It is one engineer's answer to a single question: can you prove a support agent is good
 enough to put in front of real customers, and explain exactly why when it is not?
-
-## Why this project
-
-It was built to apply for the Founding AI Solutions Engineer role at Fini. That role is not
-pure eval research; it is forward-deployed solutions engineering: onboard an enterprise
-customer, tune the agent to a resolution target, catch problems, and show the ROI. TrustBench
-runs that entire loop end to end on one realistic customer, in Fini's own vocabulary.
-
-Fini's CEO has written that "companies think they've added AI to support; what they've really
-done is automate frustration," and that "the bottleneck in AI support isn't your model, it's
-your knowledge management." TrustBench is built to take those claims seriously: it measures
-resolution, not deflection, and it traces failures back to retrieval, generation, policy, or
-reasoning so you can tell which layer actually broke.
 
 ## The loop
 
@@ -30,15 +23,13 @@ reasoning so you can tell which layer actually broke.
    subscriptions, open disputes, escalate to a human.
 2. Every run emits a structured trace: what was retrieved, what the model reasoned, which
    tools were called with what result, and whether policy was in context.
-3. The eval harness scores each response on the seven trust metrics. The soft ones use an
+3. The eval harness scores each response on the six trust metrics. The soft ones use an
    LLM judge (Gemini Pro grading Gemini Flash); the hard ones are deterministic checks.
 4. The judge is calibrated against human labels, so judge quality is measured, not assumed.
 5. Two agent versions are compared. A regression that only shows up on one ticket category
    is surfaced, shown to be statistically significant, and traced to its root cause.
 
-## The seven trust metrics
-
-These map to Fini's published "Trust Metrics" framework.
+## The six trust metrics
 
 | Trust dimension | How TrustBench measures it |
 | --- | --- |
@@ -85,18 +76,38 @@ dashboard/       Next.js results dashboard
 
 ## Setup
 
+macOS/Linux:
+
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -e ".[dev]"
+    pytest                              # 82 tests, no network needed
+
+Windows (PowerShell):
+
     python -m venv .venv
     .venv\Scripts\Activate.ps1
     pip install -e ".[dev]"
-    pytest                              # 74 tests, no network needed
+    pytest                              # 82 tests, no network needed
 
 To run live (produces the real numbers), see `docs/RUN_LIVE.md`. You need a Gemini API key.
 
-    copy .env.example .env              # add GEMINI_API_KEY
+    cp .env.example .env                # add GEMINI_API_KEY (Windows: copy .env.example .env)
     python -m trustbench.cli.run_ticket "I lost my card, what do I do?"
     python -m trustbench.cli.run_eval --run-label v1-baseline --agent-version v1
     python -m trustbench.cli.run_eval --run-label v2-candidate --agent-version v2
     python -m trustbench.cli.compare_runs v1-baseline v2-candidate
+
+## Motivation
+
+TrustBench was originally built to apply for the Founding AI Solutions Engineer role at Fini,
+and the six trust dimensions map to Fini's published "Trust Metrics" framework. That role is
+not pure eval research; it is forward-deployed solutions engineering: onboard an enterprise
+customer, tune the agent to a resolution target, catch problems, and show the ROI. TrustBench
+runs that entire loop end to end on one realistic customer. Fini's CEO has written that
+"companies think they've added AI to support; what they've really done is automate
+frustration," and that "the bottleneck in AI support isn't your model, it's your knowledge
+management." TrustBench takes those claims seriously.
 
 ## Honest notes
 
